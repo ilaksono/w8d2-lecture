@@ -34,9 +34,9 @@ function App() {
             <SuperheroPage superheros={state.superheros}/>
           </Route>
 
-          <Route path="/search">
+          <PrivateRoute path="/search">
             <Search />
-          </Route>
+          </PrivateRoute>
         </Switch>
       </Router>
     </div>

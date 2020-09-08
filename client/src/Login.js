@@ -1,15 +1,15 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 export default function Login() {
   const history = useHistory();
+  const { state } = useLocation();
 
   const handleSubmit = (event) => {
-    
     event.preventDefault();
-    console.log("setting token")
+    console.log('setting token');
     localStorage.setItem('token', 'abcdef123');
-    history.push('/');
+    history.push(state.from || '/');
   };
 
   return (

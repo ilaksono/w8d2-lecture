@@ -5,8 +5,12 @@ export default function PrivateRoute({ children, ...rest }) {
   return (
     <Route
       {...rest}
-      render={() => {
-        return localStorage.getItem('token') ? children : <Redirect to="/login" />;
+      render={({ location }) => {
+        return localStorage.getItem('token') ? (
+          children
+        ) : (
+          <Redirect to={{ pathname: '/login', state: { from: location } }} />
+        );
       }}
     />
   );
