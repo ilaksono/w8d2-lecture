@@ -6,40 +6,38 @@ import './Search.scss';
 
 export default function Search() {
   const [searchContent, setSearchContent] = useState('');
-
-  const history = useHistory();
-
-  const { path } = useRouteMatch();
-
-  const { search } = useLocation();
-  const { name } = queryString.parse(search);
-
+  
   const SearchResult = ({ name }) => {
+    // using the custom hook to get the data
     const { heroDetails, loading, error } = useSearch(name);
-    console.log('Search Result');
 
-    console.log('Hero Details', heroDetails);
+    // history
+
+    // Extract and parse query string (useLocation, queryString.parse )
 
     return (
       <div>
         <h3>Search for: {name}</h3>
-        {loading && <p>loading...</p>}
-        {heroDetails && (
-          <div className="search-result">
+
+        {/* output loading if loading */}
+
+        {/* ouput herosDetails.results if herosDetails */}
+
+        <div className="search-result">
             <ul>
-              {heroDetails.results.map((hero) => (
-                <li key={hero.id}>{hero.name}</li>
-              ))}
             </ul>
           </div>
-        )}
+
       </div>
     );
   };
 
   const handleSubmit = (event) => {
+
     event.preventDefault();
-    history.push(`${path}?name=${searchContent}`);
+
+    // push to history the query string
+
   };
 
   return (
@@ -55,7 +53,7 @@ export default function Search() {
         <input type="submit" value="Search" />
       </form>
 
-      {name && <SearchResult name={name} />}
+      {/* {name && <SearchResult name={name} />} */}
     </>
   );
 }
