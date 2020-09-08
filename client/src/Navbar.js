@@ -14,6 +14,7 @@ export default function Navbar() {
         <li><Link to='/'>Home</Link></li>
         <li><Link to='/superheros'>Superheros</Link></li>
         <li><Link to='/search'>Search</Link></li>
+        <li><Link to='/login'>Login</Link></li>
       </ul>
 
     </nav>

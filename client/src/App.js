@@ -7,6 +7,8 @@ import useSuperheros from './hooks/useSuperheros';
 import Superheros from './Superheros';
 import Home from './Home';
 import SuperheroPage from './SuperheroPage';
+import Login from './Login';
+import PrivateRoute from './PrivateRoute';
 
 function App() {
   const {state} = useSuperheros();
@@ -20,9 +22,13 @@ function App() {
             <Home />
           </Route>
 
-          <Route exact path='/superheros'>
-            <Superheros superheros={state.superheros} loading={state.loading} />
+          <Route path='/login'>
+            <Login />
           </Route>
+
+          <PrivateRoute exact path='/superheros'>
+            <Superheros superheros={state.superheros} loading={state.loading} />
+          </PrivateRoute>
 
           <Route path='/superheros/:id'>
             <SuperheroPage superheros={state.superheros}/>
