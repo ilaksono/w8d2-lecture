@@ -1,0 +1,13 @@
+.hero-details {
+  display: flex;
+  margin: 2em;
+
+  .avatar-image img{
+    width: 10em;
+  }
+
+  .powerstats li {
+    display: flex;
+    justify-content: flex-start;
+  }
+}
