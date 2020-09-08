@@ -11,7 +11,7 @@ import Login from './Login';
 import PrivateRoute from './PrivateRoute';
 
 function App() {
-  const {state} = useSuperheros();
+  const { state } = useSuperheros();
 
   return (
     <div className="App">
@@ -22,21 +22,25 @@ function App() {
             <Home />
           </Route>
 
-          <Route path='/login'>
+          <Route path="/login">
             <Login />
           </Route>
 
-          <PrivateRoute exact path='/superheros'>
+          <PrivateRoute exact path="/superheros">
             <Superheros superheros={state.superheros} loading={state.loading} />
           </PrivateRoute>
 
-          <Route path='/superheros/:id'>
-            <SuperheroPage superheros={state.superheros}/>
+          <Route path="/superheros/:id">
+            <SuperheroPage superheros={state.superheros} />
           </Route>
 
           <PrivateRoute path="/search">
             <Search />
           </PrivateRoute>
+
+          <Route path="*">
+            <h1>404 - Path not found</h1>
+          </Route>
         </Switch>
       </Router>
     </div>
