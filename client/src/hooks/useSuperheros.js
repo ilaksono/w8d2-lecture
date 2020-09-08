@@ -19,7 +19,6 @@ const useSuperheros = () => {
   useEffect(() => {
     Promise.all(promises)
       .then((result) => {
-        console.log(result);
         result.forEach(({ data: superhero }) =>
           dispatch({type: ADD_SUPERHERO, superhero})
         );

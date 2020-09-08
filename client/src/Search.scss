@@ -1,0 +1,10 @@
+.search-result {
+  display: flex;
+  justify-content: center;
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
