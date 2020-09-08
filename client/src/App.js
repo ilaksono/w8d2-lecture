@@ -9,6 +9,7 @@ import Home from './Home';
 import SuperheroPage from './SuperheroPage';
 import Login from './Login';
 import PrivateRoute from './PrivateRoute';
+import HerosContext from './HerosContext';
 
 function App() {
   const { state } = useSuperheros();
@@ -27,7 +28,9 @@ function App() {
           </Route>
 
           <PrivateRoute exact path="/superheros">
-            <Superheros superheros={state.superheros} loading={state.loading} />
+            <HerosContext.Provider value={state.superheros}>
+              <Superheros loading={state.loading} />
+            </HerosContext.Provider> 
           </PrivateRoute>
 
           <Route path="/superheros/:id">
