@@ -1,68 +1,231 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# React - Advanced Topics
 
-## Available Scripts
+## Content
 
-In the project directory, you can run:
+- React Router V5
 
-### `yarn start`
+  - How to use React Router
+  - Passing props
+  - Url Parameter
+  - Query String
+  - Private Route
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- useContext
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+## React Router V5
 
-### `yarn test`
+### Why use React Router?
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+React Router allows us to build a single-page web application with client-side navigation without the page refreshing as the user navigates. React router also allows the user to utilize the back button and the refresh page while maintaining the correct view of the application.
 
-### `yarn build`
+- The back-end is an API, it will not do any routing involving client-side navigation
+- In React, a page reload will reset the state (we don't want that)
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- note: a page reload in React will reset to the initial state
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+### How to use React Router
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- BrowserRouter component
+- Switch will only render the first route that match, without it the \* and a 404 will always match
 
-### `yarn eject`
+`import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+```js
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+...
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+return (
+  <Router>
+    <Switch>
+      <Route exact path="/">
+        <Home />
+      </Route>
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+      <Route path="/login">
+        <Login />
+      </Route>
 
-## Learn More
+      <Route path="*">
+        <h1>404 - Path not found</h1>
+      </Route>
+    </Switch>
+  </Router>
+)
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Passing Props
 
-### Code Splitting
+- Since React Router V5 utilizes a child component, we can pass it any props to it much like any other.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+```js
+<Route exact path="/">
+  <Home title="Welcome home" />
+</Route>
+```
 
-### Analyzing the Bundle Size
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+### URL Parameters
 
-### Making a Progressive Web App
+- Value set dynamically in the URL
+- for example, `/superheros/:id`
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+- we need a route to handle it
 
-### Advanced Configuration
+```js
+<Route path="/superheros/:id">
+  <SuperheroPage />
+</Route>
+```
+- in the target component, we need to use `useParams`
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+```js
+import { useParams } from 'react-router-dom';
 
-### Deployment
+export default function SuperheroPage({ superheros }) {
+  const { id } = useParams();
+...
+```
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+### Query Strings
 
-### `yarn build` fails to minify
+- A query string can be added to the url
+- For example: `/search?name=batman`
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+- to extract the query string, we need to use the `useLocation` hook
+- to parse the query string, we need to install the `query-string` npm package
+
+```js
+import { useLocation } from 'react-router-dom';
+import queryString from 'query-string';
+
+export default function Search() {
+  const { search } = useLocation();
+  const { name } = queryString.parse(search);
+
+...
+```
+
+### Nested Routes
+
+- Whenever we need to re-use the current path into our route, we can use `path` from the `useRouteMatch` hook
+
+```js
+import { Link, useRouteMatch } from 'react-router-dom';
+
+export default function Superhero({id, name}) {
+  const { path } = useRouteMatch();
+
+  return (
+    Link to={`${path}/${id}`}>{name}</Link>
+  )
+
+```
+
+- const { path } = useRouteMatch()
+
+### Navigating
+
+#### Link to
+
+- How to use Link to
+- Passing props to Link to using an object
+
+- Redirect (extra piece of state, more declarative)
+- useHistory (more imperative, history.push, history.replace)
+
+#### useHistory
+
+- The `useHistory` hook allows us to redirect to another page.
+- We can also use the Redirect component
+
+```js
+import { useHistory } from 'react-router-dom';
+
+export default function Component() {
+  const history = useHistory();
+  ...
+```
+
+- To redirect, we simply use `history.push` providing the new path.
+- For example: `history.push('/')` to redirect to home page.
+
+
+### Authentication
+
+- client-side protected routes only for UX
+- Data coming from back-end still need to be protected as well
+
+```js
+export default function PrivateRoute({ children, ...rest }) {
+  return (
+    <Route
+      {...rest}
+      render={({ location }) => {
+        return localStorage.getItem('token') ? (
+          children
+        ) : (
+          <Redirect to={{ pathname: '/login', state: { from: location } }} />
+        );
+      }}
+    />
+  );
+}
+```
+
+- in Login, we can extract the location with `useLocation`
+
+```js
+  import { useHistory, useLocation } from 'react-router-dom';
+
+  export default function Login() {
+  const history = useHistory();
+  const { state } = useLocation();
+
+...
+
+history.push(state.from || '/');
+
+```
+
+## Context
+
+Allows to pass props to children without having to pass props manually at every level.
+
+1. Provider: Declare the data that we want to make available
+2. Consumer: Have components that need the data to subscribe => useContext hook
+
+- We need to create a context
+
+```js
+import React, {createContext} from 'react';
+
+const StateContext = createContext();
+
+export default StateContext;
+
+```
+
+- Wrapped the components we want to provide the context with:
+
+```js
+ return (
+    <div className="App">
+        <StateContext.Provider value={state}>
+          <Router>
+            <Switch>
+              <Route exact path="/">
+                <Home />
+              </Route>
+...
+```
+
+- Any children can then utilize `useContext` to get access to the state
+
+```js
+import StateContext from './StateContext';
+
+export default function Home() {
+  const state = useContext(StateContext);
+...
+```
