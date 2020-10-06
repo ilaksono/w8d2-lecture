@@ -6,9 +6,11 @@ export default function Superhero({ id, name, image }) {
 
   return (
     <>
-    {/* adding images and links on the name */}
+      {/* adding images and links on the name */}
       <li>
         {/* link to an url parameter on the id */}
+        <img src={image.url} alt={name} />
+        <Link to={`${path}/${id}`}>{name}</Link>
       </li>
     </>
   );
