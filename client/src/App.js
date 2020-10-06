@@ -10,6 +10,7 @@ import Superheros from './Superheros';
 import Home from './Home';
 import SuperheroPage from './SuperheroPage';
 import Login from './Login';
+import PrivateRoute from './PrivateRoute';
 import { ADD_SUPERHERO } from './reducers/dataReducer';
 
 function App() {
@@ -26,9 +27,10 @@ function App() {
                 <Home />
               </Route>
 
-              <Route exact path="/superheros">
+              {/* This route cannot be access without being logged in */}
+              <PrivateRoute exact path="/superheros">
                 <Superheros />
-              </Route>
+              </PrivateRoute>
 
               <Route path="/superheros/:id">
                 <SuperheroPage superheros={state.superheros} />
